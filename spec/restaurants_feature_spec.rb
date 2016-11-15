@@ -31,6 +31,17 @@ feature 'restaurants' do
       expect(page).to have_content 'KFC'
       expect(current_path).to eq '/restaurants'
     end
+
+    context 'an invalid restaurant' do
+      scenario 'does no let you submit a name that is too short' do
+        visit '/restaurants'
+        click_link 'Add a restaurant'
+        fill_in 'Name', with: 'aa'
+        click_button 'Create Restaurant'
+        expect(page).not_to have_css 'h2', text: 'aa'
+        expect(page).to have_content 'error'
+      end
+    end
   end
 
   context 'viewing restaurants' do
@@ -62,16 +73,13 @@ feature 'restaurants' do
   end
 
   context 'deleting restaurants' do
-
     before { Restaurant.create name: 'KFC', description: 'Deep fried goodness' }
-
     scenario 'removes a restaurant when a user clicks a delete link' do
       visit '/restaurants'
       click_link 'Delete KFC'
       expect(page).not_to have_content 'KFC'
       expect(page).to have_content 'Restaurant deleted successfully'
     end
-
   end
-  
+
 end
