@@ -37,7 +37,22 @@ feature 'restaurants' do
       visit '/restaurants'
       click_link 'Frank Doubles'
       expect(page).to have_content 'Frank Doubles'
-      expect(current_path).to eq "/restaurants/#{doubles.id}"
+      expect(current_path).to eq("/restaurants/#{doubles.id}")
    end
+  end
+
+  context 'edit a restaurant' do
+    let!(:doubles){ Restaurant.create(name:'Frank Doubles') }
+
+     scenario 'lets a user edit a restaurant' do
+      visit '/restaurants'
+      click_link 'Edit Frank Doubles'
+      fill_in 'Name', with: 'Frank Doubles'
+      fill_in 'Description', with: 'The best doubles in Trinidad!'
+      click_button 'Update Restaurant'
+      expect(page).to have_content('Frank Doubles')
+      expect(page).to have_content('The best doubles in Trinidad!')
+      expect(current_path).to eq("/restaurants")
+    end
   end
 end
