@@ -29,4 +29,15 @@ feature 'restaurants' do
       expect(current_path).to eq('/restaurants')
     end
   end
+
+  context 'view a restaurant' do
+    let!(:doubles){ Restaurant.create(name:'Frank Doubles') }
+
+     scenario 'lets a user view a restaurant' do
+      visit '/restaurants'
+      click_link 'Frank Doubles'
+      expect(page).to have_content 'Frank Doubles'
+      expect(current_path).to eq "/restaurants/#{doubles.id}"
+   end
+  end
 end
