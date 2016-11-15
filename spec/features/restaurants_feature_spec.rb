@@ -38,6 +38,15 @@ feature 'restaurants' do
         expect(page).not_to have_css 'h2', text: 'kf'
         expect(page).to have_content 'error'
       end
+
+      scenario 'restaurant name already exists' do
+        Restaurant.create(name: "The Alis' Tavern")
+        visit '/restaurants'
+        click_link 'Add a restaurant'
+        fill_in 'Name', with: "The Alis' Tavern"
+        click_button 'Create Restaurant'
+        expect(page).to have_content("Name has already been taken")
+      end
     end
   end
 
