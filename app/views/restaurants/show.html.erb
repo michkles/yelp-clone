@@ -1,2 +1,11 @@
 <p><%= @restaurant.name %></p>
 <p><%= @restaurant.description %></p>
+
+<p>
+  <% if @restaurant.reviews.any? %>
+    <%= @restaurant.reviews.each do |review| %>
+      <p>Thoughts: <%= review.thoughts %></p>
+      <p>Rating: <%= review.rating %></p>
+    <% end %>
+  <% end %>
+</p>
