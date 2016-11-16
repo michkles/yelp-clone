@@ -17,5 +17,4 @@
 .byebug_history
 
 # Don't check in credentials
-config/secrets.yml
 config/env.yml
