@@ -10,8 +10,6 @@ class ReviewsController < ApplicationController
     redirect_to '/restaurants'
   end
 
-
-
 private
 
   def review_params
