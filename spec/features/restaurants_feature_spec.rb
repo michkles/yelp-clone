@@ -23,8 +23,15 @@ feature 'restaurants' do
   end
 
   context 'creating restaurants' do
+
+    scenario 'user cannot create a restaurant when not signed in' do
+      visit('/')
+      click_link 'Add a restaurant'
+      expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    end
+
     scenario 'prompts user to fill out a form, then displays the new restaurant' do
-      visit '/restaurants'
+      sign_up_in
       click_link 'Add a restaurant'
       fill_in 'Name', with: 'KFC'
       click_button 'Create Restaurant'
@@ -34,7 +41,7 @@ feature 'restaurants' do
 
     context 'an invalid restaurant' do
       scenario 'does no let you submit a name that is too short' do
-        visit '/restaurants'
+        sign_up_in
         click_link 'Add a restaurant'
         fill_in 'Name', with: 'aa'
         click_button 'Create Restaurant'
@@ -57,11 +64,18 @@ feature 'restaurants' do
   end
 
   context 'editing restaurants' do
+    before do
+      Restaurant.create name: 'Nandos', description: 'grilled chicken'
+    end
 
-    before { Restaurant.create name: 'Nandos', description: 'grilled chicken' }
+    scenario 'unable to edit until signed in' do
+      visit('/')
+      click_link 'Edit Nandos'
+      expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    end
 
     scenario 'let user edit a restaurant' do
-      visit '/restaurants'
+      sign_up_in
       click_link 'Edit Nandos'
       fill_in 'Name', with: 'Nandooos'
       fill_in 'Description', with: 'grilled cat'
@@ -73,9 +87,18 @@ feature 'restaurants' do
   end
 
   context 'deleting restaurants' do
-    before { Restaurant.create name: 'KFC', description: 'Deep fried goodness' }
+    before do
+      Restaurant.create name: 'KFC', description: 'fried chicken'
+    end
+
+    scenario 'unable to delete restaurant until signed in' do
+      visit('/')
+      click_link 'Delete KFC'
+      expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    end
+
     scenario 'removes a restaurant when a user clicks a delete link' do
-      visit '/restaurants'
+      sign_up_in
       click_link 'Delete KFC'
       expect(page).not_to have_content 'KFC'
       expect(page).to have_content 'Restaurant deleted successfully'
