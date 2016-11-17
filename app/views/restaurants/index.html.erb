@@ -6,7 +6,7 @@
     </p>
     <p>
       <% if restaurant.reviews.any? %>
-        <%= restaurant.reviews.each do |review| %>
+        <% restaurant.reviews.each do |review| %>
           <p><%= review.thoughts %></p>
           <p><%= review.rating %></p>
         <% end %>
