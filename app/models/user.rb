@@ -1,6 +1,8 @@
 class User < ApplicationRecord
 
+  has_many :reviews
   has_many :reviewed_restaurants, through: :reviews, source: :restaurant
+  has_many :restaurants
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable

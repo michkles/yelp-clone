@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'restaurants' do
+
   context 'no restaurants have been added' do
     scenario 'should display a prompt to add a restaurant' do
       visit '/restaurants'
@@ -8,10 +8,16 @@ feature 'restaurants' do
       expect(page).to have_link('Add a restaurant')
     end
   end
+feature 'restaurants' do
 
+    let!(:user) {User.create(email: 'bla@bla.com', password: 'blabla1')}
+    let!(:restaurant) { user.restaurants.build(name: 'Frank Doubles', description: 'whatever')}
+    before do
+      restaurant.save
+    end
   context 'restaurants have been added' do
+
     scenario 'restaurant is displayed' do
-      Restaurant.create(name: 'Frank Doubles')
       visit '/restaurants'
       expect(page).to have_content('Frank Doubles')
       expect(page).not_to have_content('No restaurants yet')
@@ -32,9 +38,9 @@ feature 'restaurants' do
       sign_up
       sign_in
       click_link 'Add a restaurant'
-      fill_in 'Name', with: 'Frank Doubles'
+      fill_in 'Name', with: 'Frank Triples'
       click_button 'Create Restaurant'
-      expect(page).to have_content('Frank Doubles')
+      expect(page).to have_content('Frank Triples')
       expect(page).not_to have_content('No restaurants yet')
       expect(current_path).to eq('/restaurants')
     end
@@ -52,12 +58,11 @@ feature 'restaurants' do
       end
 
       scenario 'restaurant name already exists' do
-        Restaurant.create(name: "The Alis' Tavern")
         visit '/restaurants'
         sign_up
         sign_in
         click_link 'Add a restaurant'
-        fill_in 'Name', with: "The Alis' Tavern"
+        fill_in 'Name', with: "Frank Doubles"
         click_button 'Create Restaurant'
         expect(page).to have_content("Name has already been taken")
       end
@@ -65,27 +70,25 @@ feature 'restaurants' do
   end
 
   context 'view a restaurant' do
-    let!(:doubles){ Restaurant.create(name:'Frank Doubles') }
 
     scenario 'lets a user view a restaurant' do
       visit '/restaurants'
       click_link 'Frank Doubles'
       expect(page).to have_content 'Frank Doubles'
-      expect(current_path).to eq("/restaurants/#{doubles.id}")
+      expect(current_path).to eq("/restaurants/#{restaurant.id}")
     end
   end
 
   context 'edit a restaurant' do
-    let!(:doubles){ Restaurant.create(name:'Frank Doubles') }
 
     scenario 'lets a user edit a restaurant' do
-      visit '/restaurants'
-      sign_up
       sign_in
+      visit '/restaurants'
       click_link 'Edit Frank Doubles'
       fill_in 'Name', with: 'Frank Doubles'
       fill_in 'Description', with: 'The best doubles in Trinidad!'
       click_button 'Update Restaurant'
+      # click_link 'Frank Doubles'
       expect(page).to have_content('Frank Doubles')
       expect(page).to have_content('The best doubles in Trinidad!')
       expect(current_path).to eq("/restaurants")

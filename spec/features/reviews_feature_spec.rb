@@ -1,9 +1,14 @@
 require 'rails_helper'
 
 feature 'reviewing' do
-  before { Restaurant.create name: 'KFC' }
+  let!(:user) {User.create(email: 'bla@bla.com', password: 'blabla1')}
+  let!(:restaurant) { user.restaurants.build(name: 'KFC', description: 'whatever')}
+  before do
+    restaurant.save
+  end
 
   scenario 'allows users to leave a review using a form' do
+    sign_in
     visit '/restaurants'
     click_link 'Review KFC'
     fill_in "Thoughts", with: "Amazing fried chicken. I would sell my soul for it."
