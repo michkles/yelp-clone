@@ -11,7 +11,7 @@ class ReviewsController < ApplicationController
       redirect_to '/restaurants'
     else
       if @review.errors[:user]
-        redirect_to restaurant_path, alert: 'You have already reviewed this restaurant'
+        redirect_to restaurants_path, alert: 'You have already reviewed this restaurant'
       else
         render :new
       end
